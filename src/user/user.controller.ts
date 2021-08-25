@@ -56,4 +56,14 @@ export class UserController {
       message: 'User deleted successfully',
     };
   }
+
+  @Get()
+  async findAllUsers(){
+    const users =await this.userService.findAll();
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Users fetched successfully',
+      users
+    };
+  }
 }

@@ -12,7 +12,10 @@ export class User {
     lastName: string;
     
     @Column()
-    userName:string;
+    username:string;
+
+    @Column()
+    password:string;
 
     @Column({ type: 'int' })
     age: number;

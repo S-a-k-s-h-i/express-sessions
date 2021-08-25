@@ -1,5 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpService, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm/dist';
+import { AxiosResponse } from 'axios';
+import { Observable } from 'rxjs';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,7 +10,8 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly userRepo:Repository<User>
+    @InjectRepository(User) private readonly userRepo:Repository<User>,
+    private httpService: HttpService
   ){}
 
   async createOne(createUserDto: CreateUserDto) {
@@ -46,4 +49,16 @@ export class UserService {
       return { deleted: false, message: err.message };
     }
   }
+
+  async findByName(username: string) {
+    return await this.userRepo.findOne({
+        where: {
+            username: username,
+        },
+    });
+    }
+
+  findAllUsers(): Observable<AxiosResponse<User[]>> {
+      return this.httpService.get('http://localhost:3000/user');
+    }
 }
